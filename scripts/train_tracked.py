@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import mlflow
 import mlflow.data
 import mlflow.sklearn
+import mlflow.sklearn
 import pandas as pd
 from sklearn.dummy import DummyClassifier
 from sklearn.ensemble import RandomForestClassifier
@@ -151,11 +152,20 @@ def main(name):
             serialization_format="cloudpickle",
         )
         print("Model URI:", model_info.model_uri)
+        # Complete fitted pipeline (preprocessing + classifier), original unencoded features
+        model_info = mlflow.sklearn.log_model(
+            sk_model=pipe,
+            name="churn_pipeline",
+            input_example=X_train.head(3),
+            serialization_format="cloudpickle",
+        )
+        print("Model URI:", model_info.model_uri)
         print("Run ID:", run.info.run_id)
 
 
 if __name__ == "__main__":
     main(sys.argv[1] if len(sys.argv) > 1 else "logistic_regression")
+
 
 
 
