@@ -1,0 +1,122 @@
+{
+  "seed": 42,
+  "features": [
+    "tenure",
+    "MonthlyCharges",
+    "TotalCharges",
+    "Contract",
+    "InternetService",
+    "PaymentMethod"
+  ],
+  "positive_class": "Churn = Yes (1)",
+  "split_sizes": {
+    "train": 4225,
+    "validation": 1409,
+    "test": 1409
+  },
+  "evaluated_on": "validation only (test set reserved)",
+  "selection_rule": {
+    "primary_metric": "average_precision",
+    "why": "Churners are the minority class; average precision uses the positive-class scores and does not depend on one threshold or on the majority class.",
+    "tie_margin": 0.005,
+    "tie_break": "choose the simpler model; order: logistic_regression, decision_tree, random_forest"
+  },
+  "selected_model": "random_forest",
+  "results": [
+    {
+      "model": "majority_baseline",
+      "params": {
+        "strategy": "most_frequent"
+      },
+      "fit_seconds": 0.014,
+      "average_precision": 0.2654364797728886,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "accuracy": 0.7345635202271115,
+      "confusion_matrix": [
+        [
+          1035,
+          0
+        ],
+        [
+          374,
+          0
+        ]
+      ],
+      "threshold": 0.5
+    },
+    {
+      "model": "logistic_regression",
+      "params": {
+        "max_iter": 1000
+      },
+      "fit_seconds": 0.03,
+      "average_precision": 0.6474664703085159,
+      "precision": 0.6644295302013423,
+      "recall": 0.5294117647058824,
+      "f1": 0.5892857142857143,
+      "accuracy": 0.8041163946061036,
+      "confusion_matrix": [
+        [
+          935,
+          100
+        ],
+        [
+          176,
+          198
+        ]
+      ],
+      "threshold": 0.5
+    },
+    {
+      "model": "decision_tree",
+      "params": {
+        "max_depth": 5,
+        "random_state": 42
+      },
+      "fit_seconds": 0.018,
+      "average_precision": 0.6033239843570091,
+      "precision": 0.6302521008403361,
+      "recall": 0.6016042780748663,
+      "f1": 0.615595075239398,
+      "accuracy": 0.8005677785663591,
+      "confusion_matrix": [
+        [
+          903,
+          132
+        ],
+        [
+          149,
+          225
+        ]
+      ],
+      "threshold": 0.5
+    },
+    {
+      "model": "random_forest",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 8,
+        "random_state": 42
+      },
+      "fit_seconds": 0.574,
+      "average_precision": 0.6702766760733004,
+      "precision": 0.6608391608391608,
+      "recall": 0.5053475935828877,
+      "f1": 0.5727272727272728,
+      "accuracy": 0.7998580553584103,
+      "confusion_matrix": [
+        [
+          938,
+          97
+        ],
+        [
+          185,
+          189
+        ]
+      ],
+      "threshold": 0.5
+    }
+  ]
+}

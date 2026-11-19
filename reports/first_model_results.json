@@ -1,0 +1,40 @@
+{
+  "seed": 42,
+  "features": [
+    "tenure",
+    "MonthlyCharges"
+  ],
+  "positive_class": "Churn = Yes (1)",
+  "confusion_matrix_layout": "rows = true label, columns = predicted label, order [0, 1]",
+  "split_sizes": {
+    "train": 4225,
+    "validation": 1409,
+    "test": 1409
+  },
+  "logistic_regression": {
+    "accuracy": 0.7828246983676366,
+    "confusion_matrix": [
+      [
+        950,
+        85
+      ],
+      [
+        221,
+        153
+      ]
+    ]
+  },
+  "majority_baseline": {
+    "accuracy": 0.7345635202271115,
+    "confusion_matrix": [
+      [
+        1035,
+        0
+      ],
+      [
+        374,
+        0
+      ]
+    ]
+  }
+}

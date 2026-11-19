@@ -1,0 +1,31 @@
+{
+  "id_overlap": {
+    "train_validation": 0,
+    "train_test": 0,
+    "validation_test": 0
+  },
+  "imputer_statistics": {
+    "learned": [
+      29.0,
+      70.55,
+      1373.625
+    ],
+    "training_medians": [
+      29.0,
+      70.55,
+      1373.625
+    ],
+    "full_dataset_medians": [
+      29.0,
+      70.35,
+      1397.475
+    ]
+  },
+  "policy_checks": {
+    "missing_numeric_score": 0.3425176253839631,
+    "unseen_category_score": 0.2944674496024799
+  },
+  "missing_feature_error": "ValueError",
+  "malformed_text_error": "ValueError",
+  "reload_check": "see scripts/predict_check.py"
+}
