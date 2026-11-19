@@ -12,7 +12,7 @@ their account and service information?
 
 - **TP01 (done):** reproducible project, data identification, inspection report,
   environment recreation evidence, Git workflow.
-- **TP02 (next):** preprocessing and training pipelines, built inside this same
+- **TP02 (done):** preprocessing and training pipelines, built inside this same
   project (fitted pipelines will be saved in `models/`).
 
 ## Setup
@@ -142,3 +142,59 @@ files are for TP02.
 Generated with Cookiecutter Data Science (v2). Choices: environment manager uv,
 dependency file `pyproject.toml`, no code scaffold, no dataset storage, no docs.
 CCDS version: _fill in_.
+
+## TP02: training pipeline
+
+Run from the project root, in this order (the raw CSV must be in `data/raw/`):
+
+```sh
+uv sync --locked
+uv run python scripts/train_baseline.py      # 2-feature model + majority baseline
+uv run python scripts/compare_models.py      # 3 classifiers + baseline, validation only
+uv run python scripts/train.py               # retrain the selected model, save the artifact
+uv run python scripts/predict_check.py       # fresh-process reload, no fit
+uv run python scripts/reliability_checks.py  # focused reliability checks
+```
+
+**Setup of the task.** Positive class: `Churn = Yes` (1). `customerID` and `Churn`
+are never inputs. Stratified 60/20/20 split, seed 42 (4225 / 1409 / 1409). The test
+set is reserved and not used in any script. Six features: `tenure`, `MonthlyCharges`,
+`TotalCharges` (numeric) and `Contract`, `InternetService`, `PaymentMethod`
+(categorical).
+
+**Preprocessing** (`telco_churn/pipeline.py`). Blank-only numeric text becomes missing;
+any other non-numeric text raises an error. Numeric branch: median imputer + standard
+scaler. Categorical branch: most-frequent imputer + one-hot encoder with
+`handle_unknown="ignore"`. All statistics are learned on the training set only.
+
+**Selection rule (chosen before seeing results).** Primary metric: average precision
+from positive-class scores, on validation only. If models are within 0.005, pick the
+simpler one. Precision, recall and F1 use threshold 0.5.
+
+| Model | Avg. precision | Precision | Recall | F1 | Accuracy |
+|---|---|---|---|---|---|
+| majority baseline | 0.265 | 0.000 | 0.000 | 0.000 | 0.735 |
+| logistic regression | 0.647 | 0.664 | 0.529 | 0.589 | 0.804 |
+| decision tree | 0.603 | 0.630 | 0.602 | 0.616 | 0.801 |
+| random forest (selected) | 0.670 | 0.661 | 0.505 | 0.573 | 0.800 |
+
+Full table, parameters and fit times: `reports/model_comparison.json`.
+
+**Artifact.** `models/pipeline.joblib` holds the fitted preprocessing and classifier
+together. `models/metadata.json` records the source hash, seed, feature roles,
+preprocessing settings, model parameters, metrics, threshold and the code and
+environment versions. `models/split_allocation.json` lists the customers in each set.
+Only load `.joblib` files you trust, with the same scikit-learn version.
+
+**Reliability evidence.** `reports/reliability_checks.json` (no ID overlap, imputer
+statistics match the training data, predict does not change them, missing numeric and
+unseen category policy, missing column fails visibly). Reload agreement is checked by
+`scripts/predict_check.py` (max difference 0.0, tolerance 1e-9).
+
+**Limits.**
+- Scores are not calibrated: 0.8 is not a true 80% risk.
+- The unseen-category policy avoids a crash but does not make predictions reliable.
+- The two-feature model and the six-feature models differ in features, so the gain
+  between them does not prove one algorithm is better.
+- The test set has not been used. A final test evaluation is still to be done.
+- Data come from one customer snapshot, not an event history.
