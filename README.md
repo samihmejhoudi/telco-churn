@@ -198,3 +198,23 @@ unseen category policy, missing column fails visibly). Reload agreement is check
   between them does not prove one algorithm is better.
 - The test set has not been used. A final test evaluation is still to be done.
 - Data come from one customer snapshot, not an event history.
+## TP03: experiment tracking with MLflow
+
+Tracking data are local to this project and machine: `mlflow.db` (runs, parameters, metrics, tags, registry) and `mlartifacts/` (model files, confusion matrix, provenance JSON). Both are ignored by Git.
+
+Run order (from the project root):
+
+```powershell
+# Terminal 1: tracking server (keep it running)
+uv run mlflow server --host 127.0.0.1 --port 5000 --backend-store-uri sqlite:///mlflow.db --artifacts-destination ./mlartifacts
+
+# Terminal 2: one tracked run per candidate
+foreach ($m in "majority_baseline","logistic_regression","decision_tree","random_forest") { uv run python scripts/train_tracked.py $m }
+
+# Fresh-process inference through the registry alias
+uv run python scripts/predict_mlflow.py
+```
+
+UI: http://127.0.0.1:5000. Selected model: registered name `telco-churn`, alias `candidate` (`models:/telco-churn@candidate`).
+
+Limits: a run ID or local model URI is not enough for a colleague on another machine. They also need the artifact files, the project code, the locked dependencies and the original CSV (identified by its SHA-256). Sharing needs a team server or exported artifacts.
