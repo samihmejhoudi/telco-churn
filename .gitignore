@@ -192,3 +192,5 @@ cython_debug/
 .idea/
 
 .idea/
+
+.venv_old/
