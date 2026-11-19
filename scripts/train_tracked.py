@@ -71,7 +71,7 @@ def main(name):
         })
         mlflow.set_tags({
             "git_commit": git_output("rev-parse", "HEAD"),
-            "git_uncommitted_changes": str(bool(git_output("status", "--porcelain"))),
+            "git_uncommitted_changes": str(bool(git_output("status", "--porcelain", "--untracked-files=no"))),
             "data_sha256": sha256_of_file(SOURCE),
         })
 
@@ -138,7 +138,7 @@ def main(name):
             },
             "data_sha256": sha256_of_file(SOURCE),
             "git_commit": git_output("rev-parse", "HEAD"),
-            "git_uncommitted_changes": bool(git_output("status", "--porcelain")),
+            "git_uncommitted_changes": bool(git_output("status", "--porcelain", "--untracked-files=no")),
         }
         mlflow.log_dict(provenance, "provenance.json")
 
@@ -147,6 +147,7 @@ def main(name):
 
 if __name__ == "__main__":
     main(sys.argv[1] if len(sys.argv) > 1 else "logistic_regression")
+
 
 
 
