@@ -1,0 +1,73 @@
+{
+  "created_utc": "2026-11-19T08:43:30.697618+00:00",
+  "source": {
+    "path": "data\\raw\\telco.csv",
+    "sha256": "16320c9c1ec72448db59aa0a26a0b95401046bef5d02fd3aeb906448e3055e91"
+  },
+  "seed": 42,
+  "split": {
+    "scheme": "stratified 60/20/20",
+    "sizes": {
+      "train": 4225,
+      "validation": 1409,
+      "test": 1409
+    },
+    "allocation_file": "models/split_allocation.json"
+  },
+  "positive_class": "Churn = Yes (1)",
+  "threshold": 0.5,
+  "feature_roles": {
+    "numeric": [
+      "tenure",
+      "MonthlyCharges",
+      "TotalCharges"
+    ],
+    "categorical": [
+      "Contract",
+      "InternetService",
+      "PaymentMethod"
+    ]
+  },
+  "preprocessing": {
+    "numeric": "SimpleImputer(median) + StandardScaler",
+    "categorical": "SimpleImputer(most_frequent) + OneHotEncoder(handle_unknown=ignore)",
+    "parsing": "blank-only numeric text -> missing; other non-numeric text raises an error"
+  },
+  "model": {
+    "name": "random_forest",
+    "class": "RandomForestClassifier",
+    "params": {
+      "n_estimators": 200,
+      "max_depth": 8,
+      "random_state": 42
+    }
+  },
+  "validation_metrics": {
+    "average_precision": 0.6702766760733004,
+    "precision": 0.6608391608391608,
+    "recall": 0.5053475935828877,
+    "f1": 0.5727272727272728,
+    "accuracy": 0.7998580553584103,
+    "confusion_matrix": [
+      [
+        938,
+        97
+      ],
+      [
+        185,
+        189
+      ]
+    ],
+    "threshold": 0.5
+  },
+  "artifact": "models/pipeline.joblib",
+  "code_and_environment": {
+    "git_commit": "60b2cb980e27e7ee83831a536cef094a91f8f0bb",
+    "python": "3.12.1 (tags/v3.12.1:2305ca5, Dec  7 2023, 22:03:25) [MSC v.1937 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "scikit-learn": "1.9.1",
+    "pandas": "3.1.0",
+    "numpy": "2.5.4",
+    "joblib": "1.6.0"
+  }
+}
