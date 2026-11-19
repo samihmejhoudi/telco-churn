@@ -39,7 +39,8 @@ uv run python -c "import telco_churn; print(telco_churn.__file__)"
 The raw CSV is **not stored in Git**. Get it from the instructor, or download the
 commit-pinned copy from the
 [IBM Telco repository](https://github.com/IBM/telco-customer-churn-on-icp4d), and
-save it as `data/raw/telco.csv`. Never edit this file.
+create the folder `data/raw/` if it does not exist (`mkdir data\raw` on Windows,
+`mkdir -p data/raw` on macOS/Linux) and save it as `data/raw/telco.csv`. Never edit this file.
 
 Verify it is the same file:
 
